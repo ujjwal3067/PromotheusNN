@@ -1,9 +1,3 @@
----
-title: Prometheus
-created: '2020-09-01T13:18:00.215Z'
-modified: '2020-09-01T18:48:42.618Z'
----
-
 # Prometheus
 ## NN Team Code:
 
