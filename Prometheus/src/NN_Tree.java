@@ -61,15 +61,15 @@ public class NN_Tree {
 		/*
 		 * PRINT TEST
 		 */
-		System.out.println("TEST for PRINT");
-		for(int i = 0 ; i < 10 ; i++) {
-			for(int j = 0 ; j < trainOut[0].length ; j++) {
-				System.out.println(trainOut[i][0]);
-			}
-		}
+//		System.out.println("TEST for PRINT");
+//		for(int i = 0 ; i < 10 ; i++) {
+//			for(int j = 0 ; j < trainOut[0].length ; j++) {
+//				System.out.println(trainOut[i][0]);
+//			}
+//		}
 //		checking the validity of the input data structure 
 		NODE.VALID_input_checker(trainIn, trainOut) ;
-		NODE.train(trainIn, trainOut, 100 , 4, true);
+		NODE.TRAIN(trainIn, trainOut, 100 , 4, true);
 		double[][] testIn  = new double[trainIn.length][trainIn[0].length]; 
 		double[][] testOut  = new double[trainOut.length][1]; 
 		for(int i = 0 ; i < 50 ;i++)
@@ -85,11 +85,18 @@ public class NN_Tree {
 			}
 		}
 		// testing
-		NODE.test(testIn, testOut);
-		System.out.println("printingin test output on the test "); 
+		NODE.TEST(testIn, testOut);
+//		System.out.println("printingin test output on the test "); 
 		
 		double[][] predictingInput = {{15.26,14.84,0.871,5.763,3.312,2.221,5.22}}; 
-		NODE.predict(predictingInput);		
+		ArrayList<double[][]>predicted_output = NODE.PREDICT(predictingInput);
+//		System.out.println(" predict output");
+        System.out.println("-----------------------");  
+        System.out.println("|    predicted output  |"); 
+        System.out.println("-----------------------");
+		System.out.println(predicted_output.get(0)[0][0]);
+
+		
 		
 		
 		 /**
