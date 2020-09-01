@@ -41,60 +41,7 @@ public class NN{
      * --------------------------------------------------------------------------------------------------------------------------------------------------------
      * 	!HELPER FUNCTIONS 
      * --------------------------------------------------------------------------------------------------------------------------------------------------------
-     * 
      */
-    private static final int maxCharsPerOutput = 350;
-
-    private static double activationFunction(double x){
-        return (1/(1+Math.pow(Math.E, -x)));
-    }
-    private static double activationDerivative(double x){
-        return (1/(Math.pow(Math.pow(Math.E, -x*.5)+Math.pow(Math.E, x*.5),2)));
-    }
-    private static double errorFunction(double expected, double actual){
-        return 0.5 * Math.pow((expected - actual), 2);
-    }
-    private static double errorDerivative(double expected, double actual){
-        return actual - expected;
-    }
-    private static double calcError(double[][] expected, double[][] actual){
-        double error=0;
-        if(expected.length != actual.length || expected[0].length != actual[0].length){
-            throw new IllegalArgumentException("different dimensions for expected and actual data");
-        }
-        
-        for(int row=0; row<expected.length; row++){
-            for(int col=0; col<expected[0].length; col++){
-                error += errorFunction(expected[row][col], actual[row][col]);
-            }
-        }
-        return error;
-    }
-    private static String displayConsole(double[][] matrix){
-        return Matrix.toStringOneLine(matrix, maxCharsPerOutput);
-    }
-    private static void checkError(double error){
-        if(Double.isNaN(error)){
-            throw new RuntimeException("error diverged to infinity. Try using a smaller learning rate");
-        }
-    }
-    private static double[][][] convertData(double[][] data){
-        double[][][] output = new double[data.length][data[0].length][1];
-        
-        for(int row = 0; row < data.length; row++){
-           for(int col = 0; col < data[0].length; col++){
-                output[row][col][0] = data[row][col];
-            } 
-        }
-        
-        return output;
-    }
-
-    public ArrayList<double[][]> getWeights(){
-//    	ArrayList<double[][]>  copy_weights = new ArrayList<>(this.weights);
-    	return this.weights; 
-    }
-    
     public double getLearningRate(){
         return learningRate;
     }
@@ -192,7 +139,55 @@ public class NN{
         }
     }
 
+    private static double activationFunction(double x){
+        return (1/(1+Math.pow(Math.E, -x)));
+    }
+    private static double activationDerivative(double x){
+        return (1/(Math.pow(Math.pow(Math.E, -x*.5)+Math.pow(Math.E, x*.5),2)));
+    }
+    private static double errorFunction(double expected, double actual){
+        return 0.5 * Math.pow((expected - actual), 2);
+    }
+    private static double errorDerivative(double expected, double actual){
+        return actual - expected;
+    }
+    private static double calcError(double[][] expected, double[][] actual){
+        double error=0;
+        if(expected.length != actual.length || expected[0].length != actual[0].length){
+            throw new IllegalArgumentException("different dimensions for expected and actual data");
+        }
+        
+        for(int row=0; row<expected.length; row++){
+            for(int col=0; col<expected[0].length; col++){
+                error += errorFunction(expected[row][col], actual[row][col]);
+            }
+        }
+        return error;
+    }
+    private static String displayConsole(double[][] matrix){
+        return Matrix.toStringOneLine(matrix, maxCharsPerOutput);
+    }
+    private static void checkError(double error){
+        if(Double.isNaN(error)){
+            throw new RuntimeException("error diverged to infinity. Try using a smaller learning rate");
+        }
+    }
+    private static double[][][] convertData(double[][] data){
+        double[][][] output = new double[data.length][data[0].length][1];
+        
+        for(int row = 0; row < data.length; row++){
+           for(int col = 0; col < data[0].length; col++){
+                output[row][col][0] = data[row][col];
+            } 
+        }
+        
+        return output;
+    }
 
+    public ArrayList<double[][]> getWeights(){
+//    	ArrayList<double[][]>  copy_weights = new ArrayList<>(this.weights);
+    	return this.weights; 
+    }
     
     /**
      * --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -200,6 +195,7 @@ public class NN{
      * --------------------------------------------------------------------------------------------------------------------------------------------------------
      */
     
+    private static final int maxCharsPerOutput = 300;
     private void NN_INIT(int[] NN_config, Random rand){
         //initialize
         structure = NN_config;

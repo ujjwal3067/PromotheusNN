@@ -43,8 +43,7 @@ public class NN{
      * --------------------------------------------------------------------------------------------------------------------------------------------------------
      * 
      */
-    private static final int maxCharsPerOutput = 350;
-
+    
     private static double activationFunction(double x){
         return (1/(1+Math.pow(Math.E, -x)));
     }
@@ -200,6 +199,7 @@ public class NN{
      * --------------------------------------------------------------------------------------------------------------------------------------------------------
      */
     
+    private static final int maxCharsPerOutput = 300;
     private void NN_INIT(int[] NN_config, Random rand){
         //initialize
         structure = NN_config;
