@@ -277,7 +277,7 @@ public class NN{
                 activationDerivative(layerInputs.get(layer)[row][0]);
             }
 
-            this.BIASES_DELTAS.set(layer, Matrix.subtract(this.BIASES_DELTAS.get(layer), biasGradient));
+            biasDeltas.set(layer, Matrix.subtract(biasDeltas.get(layer), biasGradient));
             double[][] weightGradient = new double[WEIGHTS.get(layer - 1).length][this.WEIGHTS.get(layer - 1)[0].length];
             for(int toNeuron = 0; toNeuron < weightGradient.length; toNeuron++){
                 for(int fromNeuron = 0; fromNeuron < weightGradient[0].length; fromNeuron++){

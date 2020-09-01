@@ -13,7 +13,7 @@ public class NN{
     private ArrayList<double[][]> WEIGHTS;
     private ArrayList<double[][]> WEIGHTS_DELTAS;
     private ArrayList<double[][]> BIASES;
-    private ArrayList<double[][]> BIASES_DELTAS;
+    private ArrayList<double[][]> biasDeltas;
     private ArrayList<double[][]> layerActivations;
     private ArrayList<double[][]> layerInputs;
     private Random rand;
@@ -188,16 +188,16 @@ public class NN{
 
     private void updatebiases(int trainingNum){
         for(int i=1; i<BIASES.size(); i++){
-        	this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate/trainingNum, this.BIASES_DELTAS.get(i))));
-            this.BIASES_DELTAS.set(i, new double[structure[i]][1]); 
+        	this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate/trainingNum, biasDeltas.get(i))));
+            biasDeltas.set(i, new double[structure[i]][1]); 
         }
     }
 
     private void updatebiases(int trainingNum, boolean normalized){
         if(normalized){
             for(int i=1; i<this.BIASES.size(); i++){
-                this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate, Matrix.normalize(this.BIASES_DELTAS.get(i)))));
-                this.BIASES_DELTAS.set(i, new double[structure[i]][1]);
+                this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate, Matrix.normalize(biasDeltas.get(i)))));
+                biasDeltas.set(i, new double[structure[i]][1]);
             }
         }else{
             updatebiases(trainingNum);
@@ -220,7 +220,7 @@ public class NN{
         this.WEIGHTS 			= new ArrayList<double[][]>(NN_config.length-1);
         this.WEIGHTS_DELTAS		= new ArrayList<double[][]>(NN_config.length-1);
         this.BIASES 			= new ArrayList<double[][]>(NN_config.length);
-        this.BIASES_DELTAS 				= new ArrayList<double[][]>(NN_config.length);
+        biasDeltas 				= new ArrayList<double[][]>(NN_config.length);
         
         
         //set up structure
@@ -232,10 +232,10 @@ public class NN{
                 this.WEIGHTS.add(Matrix.randomizeArray(new double[NN_config[LAYER]][NN_config[LAYER-1]], rand));
                 this.WEIGHTS_DELTAS.add(new double[NN_config[LAYER]][NN_config[LAYER-1]]);
                 this.BIASES.add(Matrix.randomizeArray(new double[NN_config[LAYER]][1], rand));
-                this.BIASES_DELTAS.add(new double[NN_config[LAYER]][1]);
+                biasDeltas.add(new double[NN_config[LAYER]][1]);
             }else{
                 this.BIASES.add(null);
-                this.BIASES_DELTAS.add(null);
+                biasDeltas.add(null);
                 layerInputs.add(null);
             }
         }
@@ -271,13 +271,13 @@ public class NN{
 
         double[][] layerGradient = Matrix.subtract(layerActivations.get(structure.length-1), output);
         for(int layer = structure.length - 1; layer > 0; layer--){
-            double[][] biasGradient = new double[this.BIASES.get(layer).length][1];
+            double[][] biasGradient = new double[biases.get(layer).length][1];
             for(int row = 0; row < biasGradient.length; row++){
                 biasGradient[row][0] = layerGradient[row][0] *
                 activationDerivative(layerInputs.get(layer)[row][0]);
             }
 
-            this.BIASES_DELTAS.set(layer, Matrix.subtract(this.BIASES_DELTAS.get(layer), biasGradient));
+            biasDeltas.set(layer, Matrix.subtract(biasDeltas.get(layer), biasGradient));
             double[][] weightGradient = new double[WEIGHTS.get(layer - 1).length][this.WEIGHTS.get(layer - 1)[0].length];
             for(int toNeuron = 0; toNeuron < weightGradient.length; toNeuron++){
                 for(int fromNeuron = 0; fromNeuron < weightGradient[0].length; fromNeuron++){
