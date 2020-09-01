@@ -388,10 +388,9 @@ public class NN{
             checkError(CumulativeERROR);checkError(inputError);   
             System.out.println("TEST ["+i+"]" + " -- ERROR: "+ inputError);System.out.println();
         }
-        System.out.println(); 
-        System.out.println("----------------------------------------------------------");
-        System.out.println("[ AVERAGE ] error in testing : " + CumulativeERROR/TEST_input.length);
-        System.out.println("----------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------");
+        System.out.println("AVERAGE error in testing : " + CumulativeERROR/TEST_input.length+"\n\n");
+        System.out.println("----------------------------------------------------------------------");
 
     }
 

@@ -16,25 +16,24 @@ public class NN{
     private ArrayList<double[][]> BIASES_DELTAS;
     private ArrayList<double[][]> LAYER_ACTIVATIONS;
     private ArrayList<double[][]> LAYER_INPUTS;
-    private double LEARNING_RATE;
-    private double BIAS_LEARNING_RATE;
-    private int[] STRUCTURE; 
     private Random rand;
-
+    private double learningRate;
+    private double biasLearningRate;
+    private int[] STRUCTURE; 
 
     //Constructor
     
     public NN(int[] NN_config){
         rand = new Random();
-        this.LEARNING_RATE = 1;
-        this.BIAS_LEARNING_RATE = 1;
+        learningRate = 1;
+        biasLearningRate = 1;
         NN_INIT( NN_config, rand);
     }
 
     public NN(int[] NN_config, double learning_rate){
         rand = new Random();
-        this.LEARNING_RATE = learning_rate;
-        this.BIAS_LEARNING_RATE = learning_rate;
+        learningRate = learning_rate;
+        biasLearningRate = learning_rate;
         NN_INIT(NN_config, rand);
     }
     
@@ -109,13 +108,13 @@ public class NN{
     }
     
     public double getLearningRate(){
-        return this.LEARNING_RATE;
+        return learningRate;
     }
 
     public void setLearningRate(double lr){
         if(lr > 0){
-            this.LEARNING_RATE = lr;
-            this.BIAS_LEARNING_RATE = lr;
+            learningRate = lr;
+            biasLearningRate = lr;
         }else{
             throw new IllegalArgumentException("invalied learning rate \n please enter positive learning rate"+lr);
         }
@@ -172,14 +171,14 @@ public class NN{
    
     private void WEIGHTS_UPDATE(int trainingNum){
         for(int i=0; i<WEIGHTS.size(); i++){
-        	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(this.LEARNING_RATE/trainingNum, this.WEIGHTS_DELTAS.get(i))));
+        	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(learningRate/trainingNum, this.WEIGHTS_DELTAS.get(i))));
         	this.WEIGHTS_DELTAS.set(i, new double[this.STRUCTURE[i+1]][this.STRUCTURE[i]]);
         }
     }
     private void WEIGHTS_UPDATE(int trainingNum, boolean normalized){
         if(normalized){
             for(int i=0; i<WEIGHTS.size(); i++){
-            	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(this.LEARNING_RATE, VECTOR.normalize(this.WEIGHTS_DELTAS.get(i)))));
+            	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(learningRate, VECTOR.normalize(this.WEIGHTS_DELTAS.get(i)))));
             	this.WEIGHTS_DELTAS.set(i, new double[this.STRUCTURE[i+1]][this.STRUCTURE[i]]);
             }
         }else{
@@ -189,7 +188,7 @@ public class NN{
 
     private void BIAS_UPDATE(int trainingNum){
         for(int i=1; i<BIASES.size(); i++){
-        	this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(this.BIAS_LEARNING_RATE/trainingNum, this.BIASES_DELTAS.get(i))));
+        	this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(biasLearningRate/trainingNum, this.BIASES_DELTAS.get(i))));
             this.BIASES_DELTAS.set(i, new double[this.STRUCTURE[i]][1]); 
         }
     }
@@ -197,7 +196,7 @@ public class NN{
     private void BIAS_UPDATE(int trainingNum, boolean normalized){
         if(normalized){
             for(int i=1; i<this.BIASES.size(); i++){
-                this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(this.BIAS_LEARNING_RATE, VECTOR.normalize(this.BIASES_DELTAS.get(i)))));
+                this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(biasLearningRate, VECTOR.normalize(this.BIASES_DELTAS.get(i)))));
                 this.BIASES_DELTAS.set(i, new double[this.STRUCTURE[i]][1]);
             }
         }else{
@@ -377,9 +376,7 @@ public class NN{
         double[][][] TEST_input = DATAmanipulation(_TEST_input);
         double[][][] TEST_output = DATAmanipulation(_TEST_output);
         
-        System.out.println("-------------------------"); 
-        System.out.println("|   TESTING in progress |");
-        System.out.println("-------------------------");         
+        System.out.println("TEST Resulted per iteration.\n");        
         double CumulativeERROR = 0;
         for(int i=0; i<TEST_input.length; i++){
         	FORWARD_PROPAGATION(TEST_input[i]);
@@ -388,11 +385,8 @@ public class NN{
             checkError(CumulativeERROR);checkError(inputError);   
             System.out.println("TEST ["+i+"]" + " -- ERROR: "+ inputError);System.out.println();
         }
-        System.out.println(); 
-        System.out.println("----------------------------------------------------------");
-        System.out.println("[ AVERAGE ] error in testing : " + CumulativeERROR/TEST_input.length);
-        System.out.println("----------------------------------------------------------");
-
+        
+        System.out.println("AVERAGE error in testing : " + CumulativeERROR/TEST_input.length+"\n\n");
     }
 
     /**

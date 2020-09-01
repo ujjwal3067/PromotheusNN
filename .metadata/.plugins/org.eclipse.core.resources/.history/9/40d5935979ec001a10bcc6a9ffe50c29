@@ -51,9 +51,7 @@ public class NN_Tree {
 
 		DATA.Details(3);
 		int[] structure = {7,7,7,7, 1};
-		
 		NN NODE = new NN(structure) ; 
-		
 		System.out.println("Start Training.....");
 		System.out.println("output data test");
 		NODE.VALID_input_checker(trainIn, trainOut) ;

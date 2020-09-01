@@ -50,10 +50,12 @@ public class NN_Tree {
 		System.out.println("");
 
 		DATA.Details(3);
+		
+		/**
+		 * Creating Neural Network node
+		 */
 		int[] structure = {7,7,7,7, 1};
-		
 		NN NODE = new NN(structure) ; 
-		
 		System.out.println("Start Training.....");
 		System.out.println("output data test");
 		NODE.VALID_input_checker(trainIn, trainOut) ;

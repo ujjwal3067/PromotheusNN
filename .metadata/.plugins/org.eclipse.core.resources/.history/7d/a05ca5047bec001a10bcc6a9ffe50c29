@@ -390,7 +390,7 @@ public class NN{
         }
         System.out.println(); 
         System.out.println("----------------------------------------------------------");
-        System.out.println("[ AVERAGE ] error in testing : " + CumulativeERROR/TEST_input.length);
+        System.out.println("[AVERAGE] error in testing : " + CumulativeERROR/TEST_input.length);
         System.out.println("----------------------------------------------------------");
 
     }

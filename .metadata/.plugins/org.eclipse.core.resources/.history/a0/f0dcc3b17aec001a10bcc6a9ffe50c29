@@ -377,9 +377,7 @@ public class NN{
         double[][][] TEST_input = DATAmanipulation(_TEST_input);
         double[][][] TEST_output = DATAmanipulation(_TEST_output);
         
-        System.out.println("-------------------------"); 
-        System.out.println("|   TESTING in progress |");
-        System.out.println("-------------------------");         
+        System.out.println("TEST Resulted per iteration.\n");        
         double CumulativeERROR = 0;
         for(int i=0; i<TEST_input.length; i++){
         	FORWARD_PROPAGATION(TEST_input[i]);
@@ -388,11 +386,8 @@ public class NN{
             checkError(CumulativeERROR);checkError(inputError);   
             System.out.println("TEST ["+i+"]" + " -- ERROR: "+ inputError);System.out.println();
         }
-        System.out.println(); 
-        System.out.println("----------------------------------------------------------");
-        System.out.println("[ AVERAGE ] error in testing : " + CumulativeERROR/TEST_input.length);
-        System.out.println("----------------------------------------------------------");
-
+        
+        System.out.println("AVERAGE error in testing : " + CumulativeERROR/TEST_input.length+"\n\n");
     }
 
     /**

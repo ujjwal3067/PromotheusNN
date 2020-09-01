@@ -46,6 +46,7 @@ public class DataProcessingPipeline {
 
 	}
 	
+	
 	//data processing pipeline
 	public void DATA_Processing() {
 		
@@ -83,6 +84,16 @@ public class DataProcessingPipeline {
 
 			}
 			
+			/*
+			 * PRINT TEST
+			 */
+//			System.out.println("TEST for PRINT");
+//			for(int i = 0 ; i < 10 ; i++) {
+//				for(int j = 0 ; j < this.trainOut[0].length ; j++) {
+//					System.out.println(this.trainOut[i]);
+//				}
+//			}
+
 			 
 	
 		}

@@ -50,12 +50,24 @@ public class NN_Tree {
 		System.out.println("");
 
 		DATA.Details(3);
+		
+		/**
+		 * Creating Neural Network node
+		 */
 		int[] structure = {7,7,7,7, 1};
-		
 		NN NODE = new NN(structure) ; 
-		
 		System.out.println("Start Training.....");
 		System.out.println("output data test");
+		/*
+		 * PRINT TEST
+		 */
+//		System.out.println("TEST for PRINT");
+//		for(int i = 0 ; i < 10 ; i++) {
+//			for(int j = 0 ; j < trainOut[0].length ; j++) {
+//				System.out.println(trainOut[i][0]);
+//			}
+//		}
+//		checking the validity of the input data structure 
 		NODE.VALID_input_checker(trainIn, trainOut) ;
 		NODE.TRAIN(trainIn, trainOut, 100 , 4, true);
 		double[][] testIn  = new double[trainIn.length][trainIn[0].length]; 
