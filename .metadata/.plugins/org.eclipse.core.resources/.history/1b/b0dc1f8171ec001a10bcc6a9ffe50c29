@@ -81,7 +81,7 @@ public class NN{
     
     //Displaying the inputed matrix to the console
     private static String displayConsole(double[][] matrix){
-        return VECTOR.toStringOneLine(matrix, maxCharsPerOutput);
+        return Matrix.toStringOneLine(matrix, maxCharsPerOutput);
     }
     
     //Checking for convergance of error
@@ -171,14 +171,14 @@ public class NN{
    
     private void WEIGHTS_UPDATE(int trainingNum){
         for(int i=0; i<WEIGHTS.size(); i++){
-        	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(learningRate/trainingNum, this.WEIGHTS_DELTAS.get(i))));
+        	WEIGHTS.set(i, Matrix.add(WEIGHTS.get(i), Matrix.multiply(learningRate/trainingNum, this.WEIGHTS_DELTAS.get(i))));
         	this.WEIGHTS_DELTAS.set(i, new double[structure[i+1]][structure[i]]);
         }
     }
     private void updateWeights(int trainingNum, boolean normalized){
         if(normalized){
             for(int i=0; i<WEIGHTS.size(); i++){
-            	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(learningRate, VECTOR.normalize(this.WEIGHTS_DELTAS.get(i)))));
+            	WEIGHTS.set(i, Matrix.add(WEIGHTS.get(i), Matrix.multiply(learningRate, Matrix.normalize(this.WEIGHTS_DELTAS.get(i)))));
             	this.WEIGHTS_DELTAS.set(i, new double[structure[i+1]][structure[i]]);
             }
         }else{
@@ -188,7 +188,7 @@ public class NN{
 
     private void BIAS_UPDATE(int trainingNum){
         for(int i=1; i<BIASES.size(); i++){
-        	this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(biasLearningRate/trainingNum, this.BIASES_DELTAS.get(i))));
+        	this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate/trainingNum, this.BIASES_DELTAS.get(i))));
             this.BIASES_DELTAS.set(i, new double[structure[i]][1]); 
         }
     }
@@ -196,7 +196,7 @@ public class NN{
     private void updatebiases(int trainingNum, boolean normalized){
         if(normalized){
             for(int i=1; i<this.BIASES.size(); i++){
-                this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(biasLearningRate, VECTOR.normalize(this.BIASES_DELTAS.get(i)))));
+                this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate, Matrix.normalize(this.BIASES_DELTAS.get(i)))));
                 this.BIASES_DELTAS.set(i, new double[structure[i]][1]);
             }
         }else{

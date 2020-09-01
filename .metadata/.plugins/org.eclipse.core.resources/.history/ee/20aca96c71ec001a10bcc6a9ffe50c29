@@ -81,7 +81,7 @@ public class NN{
     
     //Displaying the inputed matrix to the console
     private static String displayConsole(double[][] matrix){
-        return VECTOR.toStringOneLine(matrix, maxCharsPerOutput);
+        return Matrix.toStringOneLine(matrix, maxCharsPerOutput);
     }
     
     //Checking for convergance of error
@@ -171,14 +171,14 @@ public class NN{
    
     private void WEIGHTS_UPDATE(int trainingNum){
         for(int i=0; i<WEIGHTS.size(); i++){
-        	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(learningRate/trainingNum, this.WEIGHTS_DELTAS.get(i))));
+        	WEIGHTS.set(i, Matrix.add(WEIGHTS.get(i), Matrix.multiply(learningRate/trainingNum, this.WEIGHTS_DELTAS.get(i))));
         	this.WEIGHTS_DELTAS.set(i, new double[structure[i+1]][structure[i]]);
         }
     }
     private void updateWeights(int trainingNum, boolean normalized){
         if(normalized){
             for(int i=0; i<WEIGHTS.size(); i++){
-            	WEIGHTS.set(i, VECTOR.add(WEIGHTS.get(i), VECTOR.multiply(learningRate, VECTOR.normalize(this.WEIGHTS_DELTAS.get(i)))));
+            	WEIGHTS.set(i, Matrix.add(WEIGHTS.get(i), Matrix.multiply(learningRate, Matrix.normalize(this.WEIGHTS_DELTAS.get(i)))));
             	this.WEIGHTS_DELTAS.set(i, new double[structure[i+1]][structure[i]]);
             }
         }else{
@@ -188,7 +188,7 @@ public class NN{
 
     private void BIAS_UPDATE(int trainingNum){
         for(int i=1; i<BIASES.size(); i++){
-        	this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(biasLearningRate/trainingNum, this.BIASES_DELTAS.get(i))));
+        	this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate/trainingNum, this.BIASES_DELTAS.get(i))));
             this.BIASES_DELTAS.set(i, new double[structure[i]][1]); 
         }
     }
@@ -196,7 +196,7 @@ public class NN{
     private void updatebiases(int trainingNum, boolean normalized){
         if(normalized){
             for(int i=1; i<this.BIASES.size(); i++){
-                this.BIASES.set(i, VECTOR.add(this.BIASES.get(i), VECTOR.multiply(biasLearningRate, VECTOR.normalize(this.BIASES_DELTAS.get(i)))));
+                this.BIASES.set(i, Matrix.add(this.BIASES.get(i), Matrix.multiply(biasLearningRate, Matrix.normalize(this.BIASES_DELTAS.get(i)))));
                 this.BIASES_DELTAS.set(i, new double[structure[i]][1]);
             }
         }else{
@@ -225,13 +225,13 @@ public class NN{
         
         //set up structure
         for(int LAYER = 0; LAYER < NN_config.length; LAYER++){
-            this.LAYER_ACTIVATIONS.add(VECTOR.randomizeArray( new double[NN_config[LAYER]][1], rand));
+            this.LAYER_ACTIVATIONS.add(Matrix.randomizeArray( new double[NN_config[LAYER]][1], rand));
             
             if(LAYER != 0){
-                this.LAYER_INPUTS.add(VECTOR.randomizeArray(new double[NN_config[LAYER]][1], rand));
-                this.WEIGHTS.add(VECTOR.randomizeArray(new double[NN_config[LAYER]][NN_config[LAYER-1]], rand));
+                this.LAYER_INPUTS.add(Matrix.randomizeArray(new double[NN_config[LAYER]][1], rand));
+                this.WEIGHTS.add(Matrix.randomizeArray(new double[NN_config[LAYER]][NN_config[LAYER-1]], rand));
                 this.WEIGHTS_DELTAS.add(new double[NN_config[LAYER]][NN_config[LAYER-1]]);
-                this.BIASES.add(VECTOR.randomizeArray(new double[NN_config[LAYER]][1], rand));
+                this.BIASES.add(Matrix.randomizeArray(new double[NN_config[LAYER]][1], rand));
                 this.BIASES_DELTAS.add(new double[NN_config[LAYER]][1]);
             }else{
                 this.BIASES.add(null);
@@ -251,7 +251,7 @@ public class NN{
         this.LAYER_ACTIVATIONS.set(0, input);
         
         for(int layer=1; layer<structure.length; layer++){
-            this.LAYER_INPUTS.set(layer, VECTOR.add(VECTOR.multiply(this.WEIGHTS.get(layer-1), this.LAYER_ACTIVATIONS.get(layer-1)), this.BIASES.get(layer)));
+            this.LAYER_INPUTS.set(layer, Matrix.add(Matrix.multiply(this.WEIGHTS.get(layer-1), this.LAYER_ACTIVATIONS.get(layer-1)), this.BIASES.get(layer)));
             
             for(int row=0; row<this.LAYER_ACTIVATIONS.get(layer).length; row++){
                 for(int col=0; col<this.LAYER_ACTIVATIONS.get(layer)[0].length; col++){
@@ -269,7 +269,7 @@ public class NN{
      */
     private void BACKWORD_PROPAGATION(double[][] output){
 
-        double[][] layerGradient = VECTOR.subtract(this.LAYER_ACTIVATIONS.get(structure.length-1), output);
+        double[][] layerGradient = Matrix.subtract(this.LAYER_ACTIVATIONS.get(structure.length-1), output);
         for(int layer = structure.length - 1; layer > 0; layer--){
             double[][] biasGradient = new double[this.BIASES.get(layer).length][1];
             for(int row = 0; row < biasGradient.length; row++){
@@ -277,7 +277,7 @@ public class NN{
                 activationDerivative(this.LAYER_INPUTS.get(layer)[row][0]);
             }
 
-            this.BIASES_DELTAS.set(layer, VECTOR.subtract(this.BIASES_DELTAS.get(layer), biasGradient));
+            this.BIASES_DELTAS.set(layer, Matrix.subtract(this.BIASES_DELTAS.get(layer), biasGradient));
             double[][] weightGradient = new double[WEIGHTS.get(layer - 1).length][this.WEIGHTS.get(layer - 1)[0].length];
             for(int toNeuron = 0; toNeuron < weightGradient.length; toNeuron++){
                 for(int fromNeuron = 0; fromNeuron < weightGradient[0].length; fromNeuron++){
@@ -286,7 +286,7 @@ public class NN{
                     this.LAYER_ACTIVATIONS.get(layer - 1)[fromNeuron][0];
                 }
             }
-            this.WEIGHTS_DELTAS.set(layer - 1, VECTOR.subtract(this.WEIGHTS_DELTAS.get(layer - 1), weightGradient));
+            this.WEIGHTS_DELTAS.set(layer - 1, Matrix.subtract(this.WEIGHTS_DELTAS.get(layer - 1), weightGradient));
             double[][] activationGradient = new double[this.LAYER_ACTIVATIONS.get(layer - 1).length][this.LAYER_ACTIVATIONS.get(layer - 1)[0].length];
             for(int fromNeuron = 0; fromNeuron < activationGradient.length; fromNeuron++){
                 for(int toNeuron = 0; toNeuron < structure[layer]; toNeuron++){
@@ -413,7 +413,7 @@ public class NN{
             
             System.out.println("..prediction ["+i+ "]");
             if(unseen_input[i].length*unseen_input[i][0].length < maxCharsPerOutput){
-                System.out.println("INPUT: "+ VECTOR.toStringOneLine(unseen_input[i]));
+                System.out.println("INPUT: "+ Matrix.toStringOneLine(unseen_input[i]));
             }else{
                 System.out.println("input: too long to display");
             }
