@@ -348,7 +348,7 @@ public class NN{
                         errorTotal+=calcError(
 				                        		this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1),
 				                        		TRAIN_output[j]
-				                        	  );
+				                        	);
                         checkError(errorTotal);
                     }
                     

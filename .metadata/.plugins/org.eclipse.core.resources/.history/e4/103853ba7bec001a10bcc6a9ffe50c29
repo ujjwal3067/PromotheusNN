@@ -252,10 +252,7 @@ public class NN{
         this.LAYER_ACTIVATIONS.set(0, input);
         
         for(int LAYER=1; LAYER<this.STRUCTURE.length; LAYER++){
-            this.LAYER_INPUTS.set(
-            				LAYER, VECTOR.add(VECTOR.multiply(this.WEIGHTS.get(LAYER-1),
-            				this.LAYER_ACTIVATIONS.get(LAYER-1)), 
-            				this.BIASES.get(LAYER)));
+            this.LAYER_INPUTS.set(LAYER, VECTOR.add(VECTOR.multiply(this.WEIGHTS.get(LAYER-1), this.LAYER_ACTIVATIONS.get(LAYER-1)), this.BIASES.get(LAYER)));
             
             for(int ROW =0; ROW<this.LAYER_ACTIVATIONS.get(LAYER).length; ROW++){
                 for(int col=0; col<this.LAYER_ACTIVATIONS.get(LAYER)[0].length; col++){
@@ -281,12 +278,8 @@ public class NN{
                 activationDerivative(this.LAYER_INPUTS.get(LAYER)[ROW][0]);
             }
 
-            this.BIASES_DELTAS.set(
-            						LAYER, VECTOR.subtract(this.BIASES_DELTAS.get(LAYER), 
-            						biasGradient));
-            
+            this.BIASES_DELTAS.set(LAYER, VECTOR.subtract(this.BIASES_DELTAS.get(LAYER), biasGradient));
             double[][] weightGradient = new double[WEIGHTS.get(LAYER - 1).length][this.WEIGHTS.get(LAYER - 1)[0].length];
-            
             for(int toNeuron = 0; toNeuron < weightGradient.length; toNeuron++){
                 for(int fromNeuron = 0; fromNeuron < weightGradient[0].length; fromNeuron++){
                     weightGradient[toNeuron][fromNeuron] = layerGradient[toNeuron][0] *
@@ -345,10 +338,7 @@ public class NN{
                     BACKWORD_PROPAGATION(TRAIN_output[j]);
                     
                     if(i%(iterations/10)==0){
-                        errorTotal+=calcError(
-				                        		this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1),
-				                        		TRAIN_output[j]
-				                        	  );
+                        errorTotal+=calcError(this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1), TRAIN_output[j]);
                         checkError(errorTotal);
                     }
                     
@@ -358,9 +348,7 @@ public class NN{
                     BACKWORD_PROPAGATION(TRAIN_output[TRAIN_output.length-1-batch]);
                     
                     if(i%(iterations/10)==0){
-                        errorTotal+=calcError(
-                        					this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1),
-                        					TRAIN_output[TRAIN_input.length-1-batch]);
+                        errorTotal+=calcError(this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1), TRAIN_output[TRAIN_input.length-1-batch]);
                         checkError(errorTotal);
                     }
                     WEIGHTS_UPDATE(TRAIN_input.length/BATCHES+1, normalizedGradientDescent);
