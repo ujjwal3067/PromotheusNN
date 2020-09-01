@@ -215,7 +215,7 @@ public class NN{
     private void NN_INIT(int[] NN_config, Random rand){
         //initialize
         structure = NN_config;
-        this.LAYER_ACTIVATIONS 		= new ArrayList<double[][]>(NN_config.length);
+        layerActivations 		= new ArrayList<double[][]>(NN_config.length);
         layerInputs 			= new ArrayList<double[][]>(NN_config.length);
         this.WEIGHTS 			= new ArrayList<double[][]>(NN_config.length-1);
         this.WEIGHTS_DELTAS		= new ArrayList<double[][]>(NN_config.length-1);
@@ -225,7 +225,7 @@ public class NN{
         
         //set up structure
         for(int LAYER = 0; LAYER < NN_config.length; LAYER++){
-            this.LAYER_ACTIVATIONS.add(Matrix.randomizeArray( new double[NN_config[LAYER]][1], rand));
+            layerActivations.add(Matrix.randomizeArray( new double[NN_config[LAYER]][1], rand));
             
             if(LAYER != 0){
                 layerInputs.add(Matrix.randomizeArray(new double[NN_config[LAYER]][1], rand));
@@ -248,14 +248,14 @@ public class NN{
      */
     private void propagateForward(double[][] input){
         
-        this.LAYER_ACTIVATIONS.set(0, input);
+        layerActivations.set(0, input);
         
         for(int layer=1; layer<structure.length; layer++){
-            layerInputs.set(layer, Matrix.add(Matrix.multiply(this.WEIGHTS.get(layer-1), this.LAYER_ACTIVATIONS.get(layer-1)), this.BIASES.get(layer)));
+            layerInputs.set(layer, Matrix.add(Matrix.multiply(this.WEIGHTS.get(layer-1), layerActivations.get(layer-1)), this.BIASES.get(layer)));
             
-            for(int row=0; row<this.LAYER_ACTIVATIONS.get(layer).length; row++){
-                for(int col=0; col<this.LAYER_ACTIVATIONS.get(layer)[0].length; col++){
-                    this.LAYER_ACTIVATIONS.get(layer)[row][col] = activationFunction(layerInputs.get(layer)[row][col]);
+            for(int row=0; row<layerActivations.get(layer).length; row++){
+                for(int col=0; col<layerActivations.get(layer)[0].length; col++){
+                    layerActivations.get(layer)[row][col] = activationFunction(layerInputs.get(layer)[row][col]);
                 }
             }
         }
@@ -269,7 +269,7 @@ public class NN{
      */
     private void propagateBackward(double[][] output){
 
-        double[][] layerGradient = Matrix.subtract(this.LAYER_ACTIVATIONS.get(structure.length-1), output);
+        double[][] layerGradient = Matrix.subtract(layerActivations.get(structure.length-1), output);
         for(int layer = structure.length - 1; layer > 0; layer--){
             double[][] biasGradient = new double[this.BIASES.get(layer).length][1];
             for(int row = 0; row < biasGradient.length; row++){
@@ -283,11 +283,11 @@ public class NN{
                 for(int fromNeuron = 0; fromNeuron < weightGradient[0].length; fromNeuron++){
                     weightGradient[toNeuron][fromNeuron] = layerGradient[toNeuron][0] *
                     activationDerivative(layerInputs.get(layer)[toNeuron][0]) * 
-                    this.LAYER_ACTIVATIONS.get(layer - 1)[fromNeuron][0];
+                    layerActivations.get(layer - 1)[fromNeuron][0];
                 }
             }
             this.WEIGHTS_DELTAS.set(layer - 1, Matrix.subtract(this.WEIGHTS_DELTAS.get(layer - 1), weightGradient));
-            double[][] activationGradient = new double[this.LAYER_ACTIVATIONS.get(layer - 1).length][this.LAYER_ACTIVATIONS.get(layer - 1)[0].length];
+            double[][] activationGradient = new double[layerActivations.get(layer - 1).length][layerActivations.get(layer - 1)[0].length];
             for(int fromNeuron = 0; fromNeuron < activationGradient.length; fromNeuron++){
                 for(int toNeuron = 0; toNeuron < structure[layer]; toNeuron++){
                     activationGradient[fromNeuron][0] += layerGradient[toNeuron][0] *
@@ -328,6 +328,9 @@ public class NN{
         for(int i=0; i<iterations; i++){
             
             double errorTotal=0;
+   /**
+    * Create batches
+    */
             for(int batch=0; batch< BATCHES; batch++){
                 for(int j=batch*TRAIN_input.length/BATCHES; j<(batch+1)*TRAIN_input.length/BATCHES; j++){
                 	//propagating errors
@@ -335,7 +338,7 @@ public class NN{
                     propagateBackward(TRAIN_output[j]);
                     
                     if(i%(iterations/10)==0){
-                        errorTotal+=calcError(this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1), TRAIN_output[j]);
+                        errorTotal+=calcError(layerActivations.get(layerActivations.size()-1), TRAIN_output[j]);
                         checkError(errorTotal);
                     }
                     
@@ -345,7 +348,7 @@ public class NN{
                     propagateBackward(TRAIN_output[TRAIN_output.length-1-batch]);
                     
                     if(i%(iterations/10)==0){
-                        errorTotal+=calcError(this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1), TRAIN_output[TRAIN_input.length-1-batch]);
+                        errorTotal+=calcError(layerActivations.get(layerActivations.size()-1), TRAIN_output[TRAIN_input.length-1-batch]);
                         checkError(errorTotal);
                     }
                     updateWeights(TRAIN_input.length/BATCHES+1, normalizedGradientDescent);
@@ -355,7 +358,11 @@ public class NN{
                     updatebiases(TRAIN_input.length/BATCHES, normalizedGradientDescent);
                 }
             }
-
+//            
+//            if(i%(iterations/10)==0){
+//                System.out.println("iteration: " + i); 
+//                System.out.println("average error: " + errorTotal/TRAIN_input.length + "\n");
+//            }
         }
     }
     
@@ -373,7 +380,7 @@ public class NN{
         double CumulativeERROR = 0;
         for(int i=0; i<TEST_input.length; i++){
             propagateForward(TEST_input[i]);
-            double inputError = calcError(TEST_output[i], this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1)); //calc error
+            double inputError = calcError(TEST_output[i], layerActivations.get(layerActivations.size()-1)); //calc error
             CumulativeERROR += inputError; // add error to totalError
             
             checkError(CumulativeERROR);
@@ -406,7 +413,7 @@ public class NN{
             }else{
                 System.out.println("input: too long to display");
             }
-            System.out.println("predicted output: "+ Matrix.toStringOneLine(this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1)));
+            System.out.println("predicted output: "+ Matrix.toStringOneLine(layerActivations.get(layerActivations.size()-1)));
             System.out.println();
         }
         System.out.println();

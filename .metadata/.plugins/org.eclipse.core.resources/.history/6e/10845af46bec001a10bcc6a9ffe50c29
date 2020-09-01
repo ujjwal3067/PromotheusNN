@@ -328,6 +328,9 @@ public class NN{
         for(int i=0; i<iterations; i++){
             
             double errorTotal=0;
+   /**
+    * Create batches
+    */
             for(int batch=0; batch< BATCHES; batch++){
                 for(int j=batch*TRAIN_input.length/BATCHES; j<(batch+1)*TRAIN_input.length/BATCHES; j++){
                 	//propagating errors
@@ -355,7 +358,11 @@ public class NN{
                     updatebiases(TRAIN_input.length/BATCHES, normalizedGradientDescent);
                 }
             }
-
+//            
+//            if(i%(iterations/10)==0){
+//                System.out.println("iteration: " + i); 
+//                System.out.println("average error: " + errorTotal/TRAIN_input.length + "\n");
+//            }
         }
     }
     
@@ -406,7 +413,7 @@ public class NN{
             }else{
                 System.out.println("input: too long to display");
             }
-            System.out.println("predicted output: "+ Matrix.toStringOneLine(this.LAYER_ACTIVATIONS.get(this.LAYER_ACTIVATIONS.size()-1)));
+            System.out.println("predicted output: "+ Matrix.toStringOneLine(layerActivations.get(layerActivations.size()-1)));
             System.out.println();
         }
         System.out.println();
