@@ -88,8 +88,8 @@ public class NN_Tree {
 		NODE.test(testIn, testOut);
 		System.out.println("printingin test output on the test "); 
 		
-		double[][] predictingInput = {{15.26,14.84,0.871,5.763,3.312,2.221,5.22}}; 
-		NODE.predict(predictingInput);		
+double[][] predictingInput = {{15.26,14.84,0.871,5.763,3.312,2.221,5.22}}; 
+NODE.predict(predictingInput);		
 		
 		
 		 /**
